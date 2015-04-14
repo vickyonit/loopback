@@ -1,0 +1,71 @@
+{
+  "email": {
+    "dataSource": "mail",
+    "public": false,
+    "options": {
+      "base": "Email"
+    }
+  },
+  "myUser": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "base": "User",
+      "relations": {
+        "accessTokens": {
+          "model": "myAccessToken",
+          "type": "hasMany",
+          "foreignKey": "userId",
+          "options": {
+            "disableInclude": true
+          }
+        },
+        "blogs": {
+          "model": "blog",
+          "type": "hasMany",
+          "foreignKey": "userId"
+        }
+      },
+      "acls": [
+        {
+          "permission": "ALLOW",
+          "principalType": "ROLE",
+          "principalId": "$owner"
+        }
+      ]
+    }
+  },
+  "myAccessToken": {
+    "dataSource": "db",
+    "public": true,
+    "options": {
+      "base": "AccessToken",
+      "relations": {
+        "user": {
+          "model": "myUser",
+          "type": "belongsTo",
+          "foreignKey": "userId"
+        }
+      }
+    }
+  },
+  "blog": {
+    "base": "PersistedModel",
+    "dataSource": "db",
+    "public": true,
+    "properties": {
+      "title": {
+        "type": "string"
+      },
+      "content": {
+        "type": "string"
+      }
+    },
+    "relations": {
+      "user": {
+        "type": "belongsTo",
+        "model": "myUser"
+      }
+    }
+  }
+}
